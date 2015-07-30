@@ -30,9 +30,6 @@ func main() {
 	}
 	fmt.Println(resp)
 
-	input := make(chan string)
-	receive := make(chan string)
-
 	//從server接收訊息
 	go func() {
 		for {
@@ -41,24 +38,18 @@ func main() {
 				fmt.Println(err)
 				break
 			}
-			receive <- string(message)
+			fmt.Println("Receive:", string(message))
 		}
 	}()
 
-	//stdin 接收中心 and Print
-	go func() {
-		for {
-			fmt.Print("Enter Text:")
-			var text string
-			fmt.Scanln(&text)
-			input <- text
-			rs := <-receive
-			fmt.Println("Receive:", rs)
+	for {
+		var text string
+		fmt.Scanln(&text)
+		fmt.Println("Send:", text)
+		if err := wsConn.WriteMessage(websocket.TextMessage, []byte(text)); err != nil {
+			fmt.Println("Please ReConnect")
+			break
 		}
-	}()
-
-	//訊息寄送處
-	for s := range input {
-		wsConn.WriteMessage(websocket.TextMessage, []byte(s))
 	}
+
 }
