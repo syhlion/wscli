@@ -17,8 +17,7 @@ func main() {
 		fmt.Println(err)
 	}
 	wsHeaders := http.Header{
-		"Origin": {"http://local"},
-		// your milage may differ
+		"Origin":                   {"http://local"},
 		"Sec-WebSocket-Extensions": {"permessage-deflate; client_max_window_bits, x-webkit-deflate-frame"},
 	}
 	rawConn, err := net.Dial("tcp", *addr)
@@ -33,6 +32,8 @@ func main() {
 
 	input := make(chan string)
 	receive := make(chan string)
+
+	//從server接收訊息
 	go func() {
 		for {
 			_, message, err := wsConn.ReadMessage()
@@ -40,11 +41,11 @@ func main() {
 				fmt.Println(err)
 				break
 			}
-
-			//fmt.Println("Receive:", string(message))
 			receive <- string(message)
 		}
 	}()
+
+	//stdin 接收中心 and Print
 	go func() {
 		for {
 			fmt.Print("Enter Text:")
@@ -56,6 +57,7 @@ func main() {
 		}
 	}()
 
+	//訊息寄送處
 	for s := range input {
 		wsConn.WriteMessage(websocket.TextMessage, []byte(s))
 	}
