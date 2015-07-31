@@ -12,6 +12,7 @@ import (
 var addr = flag.String("addr", "127.0.0.1:8001", "ws address")
 
 func main() {
+	flag.Parse()
 	u, err := url.Parse("http://local/ws")
 	if err != nil {
 		fmt.Println(err)
@@ -20,6 +21,7 @@ func main() {
 		"Origin":                   {"http://local"},
 		"Sec-WebSocket-Extensions": {"permessage-deflate; client_max_window_bits, x-webkit-deflate-frame"},
 	}
+	println(*addr)
 	rawConn, err := net.Dial("tcp", *addr)
 	if err != nil {
 		fmt.Println(err)
