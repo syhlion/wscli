@@ -9,11 +9,11 @@ import (
 	"net/url"
 )
 
-var addr = flag.String("addr", "127.0.0.1:8001", "ws address")
+var addr = flag.String("addr", "ws://proxyws/gows/", "ws address")
 
 func main() {
 	flag.Parse()
-	u, err := url.Parse("http://local/ws")
+	u, err := url.Parse(*addr)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -22,7 +22,7 @@ func main() {
 		"Sec-WebSocket-Extensions": {"permessage-deflate; client_max_window_bits, x-webkit-deflate-frame"},
 	}
 	println(*addr)
-	rawConn, err := net.Dial("tcp", *addr)
+	rawConn, err := net.Dial("tcp", u.Host)
 	if err != nil {
 		fmt.Println(err)
 	}
