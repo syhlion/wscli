@@ -6,7 +6,7 @@
 
 ```
 //Defaut addr is 127.0.0.1:8001
-go-websocket-client -addr=10.10.10.10:99999
+ago-websocket-client -addr=10.10.10.10:99999
 
 ```
 PS. Only Send TextMesage
