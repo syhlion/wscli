@@ -10,7 +10,7 @@ verify-glide:
 		exit 1;\
 	fi
 buildwscli = GOOS=$(1) GOARCH=$(2) go build -ldflags "-X main.version=$(TAG) -X main.name=$(WSCLI) -X main.compileDate=$(DATETIME)($(TZ))" -a -o build/$(WSCLI)$(3) 
-tar = cp README.md build/ &&cd build && tar -zcvf $(WSCLI)_$(TAG)_$(1)_$(2).tar.gz $(WSCLI)$(3) README.md
+tar = cp README.md build/ &&cd build && tar -zcvf $(WSCLI)_$(TAG)_$(1)_$(2).tar.gz $(WSCLI)$(3) README.md && rm $(WSCLI)$(3) README.md
 
 build/linux: 
 	go test
