@@ -4,9 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
-	"net/url"
 	"os"
 	"time"
 
@@ -50,20 +48,10 @@ func main() {
 func run(c *cli.Context) (err error) {
 	addr := c.Args().Get(0)
 
-	u, err := url.Parse(addr)
-	if err != nil {
-		fmt.Fprintf(c.App.Writer, "Usage %s\n", c.Command.Usage)
-		return
-	}
 	wsHeaders := http.Header{}
-	rawConn, err := net.Dial("tcp", u.Host)
+	wsConn, _, err := websocket.DefaultDialer.Dial(addr, wsHeaders)
 	if err != nil {
-		fmt.Fprintf(c.App.Writer, "Usage %s\n", c.Command.Usage)
-		return
-	}
-	wsConn, _, err := websocket.NewClient(rawConn, u, wsHeaders, 1024, 1024)
-	if err != nil {
-		fmt.Fprintf(c.App.Writer, "Usage %s\n", c.Command.Usage)
+		fmt.Fprintf(c.App.Writer, "Usage %s\n err %v\n", c.Command.Usage, err)
 		return
 	}
 	defer wsConn.Close()
